@@ -3,9 +3,9 @@ let genButton = document.querySelector('#gen')
 let wordGen = document.querySelector('.randomWord')
 let hints = document.querySelector('.hints')
 
-let words = [];
-const bank = fetch('./words.txt').then(e=> e.text())
-    .then(data=>{ words = data.toLowerCase().split('\n');})
+// let words = [];
+// const bank = fetch('./words.txt').then(e=> e.text())
+//     .then(data=>{ words = data.toLowerCase().split('\n');})
 
 
 const wordContains = (word, letters) => {
