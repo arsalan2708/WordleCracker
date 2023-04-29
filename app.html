@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wordleGuess Assist</title>
+    <link rel="stylesheet" href="app.css">
+</head>
+
+<body>
+    <button title="generate random word" id="gen">⚙️</button>
+    <h3 class="randomWord"></h3>
+    <form class="cracker" autocomplete="off">
+        <div name="validPos" class="cards validPos">
+            <input maxlength=1 type="text" placeholder="1"><input maxlength=1 type="text" placeholder="2"><input maxlength=1 type="text" placeholder="3">
+            <input maxlength=1 type="text" placeholder="4"><input maxlength=1 type="text" placeholder="5">
+        </div>
+        <input type="text" name="validL" class="letters" id="validL" placeHolder="valid letters in the word" maxlength=5 >
+        <input type="text" name="invalidL" class="letters" id="invalidL" placeHolder="invalid letters" >
+        <div class="wrongSpotCont">
+        </div>
+        <button name="add" title="add validWords in wrong position">&#x2b;</button>
+    </form>
+    
+    <div wordCount="" class="hints"></div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
