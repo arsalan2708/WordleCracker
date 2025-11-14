@@ -15,6 +15,7 @@ jobs:
         with:
           args: |
             {
+              "sender": "GitHub PR Bot",
               "embeds": [
                 {
                   "title": "${{ github.event.pull_request.title }}",
@@ -38,8 +39,8 @@ jobs:
                     {
                       "name": "Status",
                       "value": ${{ 
-                        github.event.action == 'closed' && (github.event.pull_request.merged && 'Merged ✅' || 'Closed ❌') || 
-                        'Open 🔄' 
+                        github.event.action == 'closed' && (github.event.pull_request.merged && 'Merged' || 'Closed') || 
+                        'Open' 
                       }},
                       "inline": true
                     },
