@@ -1,13 +1,3 @@
-name: PR to Discord
-
-on:
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-
-jobs:
-  notify:
-    runs-on: ubuntu-latest
-    steps:
       - name: Send Discord Notification
         uses: Ilshidur/action-discord@master
         env:
@@ -15,7 +5,6 @@ jobs:
         with:
           args: |
             {
-              "sender": "GitHub PR Bot",
               "embeds": [
                 {
                   "title": "${{ github.event.pull_request.title }}",
@@ -54,3 +43,4 @@ jobs:
                 }
               ]
             }
+          sender: "GitHub PR Bot"   # This line fixes the error
