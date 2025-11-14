@@ -14,7 +14,7 @@ jobs:
           DISCORD_WEBHOOK: "https://discord.com/api/webhooks/1439028156391755869/EohlujS0sudaAtj6krL_tDaJEHoZ8XWoiSghO6fTT-Hn55bpTm59H9OXPaQ3HuY46WJH"
           DISCORD_SENDER: "GitHub PR Bot"
         with:
-          args: |
+          args: >-
             {
               "embeds": [
                 {
@@ -22,9 +22,9 @@ jobs:
                   "url": "${{ github.event.pull_request.html_url }}",
                   "description": "${{ github.event.pull_request.body || 'No description' }}",
                   "color": ${{ 
-                    github.event.action == 'closed' && github.event.pull_request.merged == true && '65280' || 
-                    github.event.action == 'closed' && '16711680' || 
-                    '3447003' 
+                    github.event.action == 'closed' && github.event.pull_request.merged && 65280 || 
+                    github.event.action == 'closed' && 16711680 || 
+                    3447003 
                   }},
                   "author": {
                     "name": "${{ github.event.pull_request.user.login }}",
@@ -38,10 +38,10 @@ jobs:
                     },
                     {
                       "name": "Status",
-                      "value": ${{ 
+                      "value": "${{ 
                         github.event.action == 'closed' && (github.event.pull_request.merged && 'Merged' || 'Closed') || 
                         'Open' 
-                      }},
+                      }}",
                       "inline": true
                     },
                     {
@@ -54,4 +54,4 @@ jobs:
                 }
               ]
             }
-          content_type: application/json   # This makes Discord render the embed
+          content_type: application/json
