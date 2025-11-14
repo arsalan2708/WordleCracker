@@ -1,3 +1,13 @@
+name: PR to Discord
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
       - name: Send Discord Notification
         uses: Ilshidur/action-discord@master
         env:
@@ -22,7 +32,7 @@
                   "fields": [
                     {
                       "name": "Branch",
-                      "value": "${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}",
+                      "value": "${{ github.event.pull_request.head.ref }} to ${{ github.event.pull_request.base.ref }}",
                       "inline": true
                     },
                     {
@@ -43,4 +53,4 @@
                 }
               ]
             }
-          sender: "GitHub PR Bot"   # This line fixes the error
+          sender: "GitHub PR Bot"
