@@ -1,25 +1,55 @@
 name: PR to Discord
+
 on:
   pull_request:
-    types: [opened, synchronize, reopened, closed, review_requested]
+    types: [opened, synchronize, reopened, closed]
 
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Send to Discord
-        uses: IlshatM/discord-webhook-action@v1
+      - name: Send Discord Notification
+        uses: Ilshidur/action-discord@master
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         with:
-          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
-          embed_title: "${{ github.event.pull_request.title }}"
-          embed_url: ${{ github.event.pull_request.html_url }}
-          embed_description: ${{ github.event.pull_request.body }}
-          embed_color: >
-            ${{ github.event.action == 'closed' && github.event.pull_request.merged == true && '5763717' || 
-                github.event.action == 'closed' && '16711680' || 
-                '3447003' }}
-          embed_author_name: ${{ github.event.pull_request.user.login }}
-          embed_author_icon: ${{ github.event.pull_request.user.avatar_url }}
-          embed_fields: |
-            Branch: ${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}
-            Status: ${{ github.event.action == 'closed' && (github.event.pull_request.merged && 'Merged' || 'Closed') || 'Open' }}
+          args: |
+            {
+              "embeds": [
+                {
+                  "title": "${{ github.event.pull_request.title }}",
+                  "url": "${{ github.event.pull_request.html_url }}",
+                  "description": "${{ github.event.pull_request.body || 'No description' }}",
+                  "color": ${{ 
+                    github.event.action == 'closed' && github.event.pull_request.merged == true && '65280' || 
+                    github.event.action == 'closed' && '16711680' || 
+                    '3447003' 
+                  }},
+                  "author": {
+                    "name": "${{ github.event.pull_request.user.login }}",
+                    "icon_url": "${{ github.event.pull_request.user.avatar_url }}"
+                  },
+                  "fields": [
+                    {
+                      "name": "Branch",
+                      "value": "${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}",
+                      "inline": true
+                    },
+                    {
+                      "name": "Status",
+                      "value": ${{ 
+                        github.event.action == 'closed' && (github.event.pull_request.merged && 'Merged ✅' || 'Closed ❌') || 
+                        'Open 🔄' 
+                      }},
+                      "inline": true
+                    },
+                    {
+                      "name": "Changes",
+                      "value": "${{ github.event.pull_request.changed_files }} files (+${{ github.event.pull_request.additions }}/-${{ github.event.pull_request.deletions }})",
+                      "inline": false
+                    }
+                  ],
+                  "timestamp": "${{ github.event.pull_request.updated_at }}"
+                }
+              ]
+            }
