@@ -11,7 +11,8 @@ jobs:
       - name: Send Discord Notification
         uses: Ilshidur/action-discord@master
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_WEBHOOK: "https://discord.com/api/webhooks/1439028156391755869/EohlujS0sudaAtj6krL_tDaJEHoZ8XWoiSghO6fTT-Hn55bpTm59H9OXPaQ3HuY46WJH/github"
+          DISCORD_SENDER: "GitHub PR Bot"
         with:
           args: |
             {
@@ -53,4 +54,3 @@ jobs:
                 }
               ]
             }
-          sender: "GitHub PR Bot"
