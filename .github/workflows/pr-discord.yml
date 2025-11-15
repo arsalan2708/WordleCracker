@@ -14,15 +14,13 @@ jobs:
           DISCORD_WEBHOOK: "https://discord.com/api/webhooks/1439028156391755869/EohlujS0sudaAtj6krL_tDaJEHoZ8XWoiSghO6fTT-Hn55bpTm59H9OXPaQ3HuY46WJH"
           DISCORD_SENDER: "GitHub PR Bot"
         with:
-          embed_title: "${{ github.event.pull_request.title }}"
-          embed_url: ${{ github.event.pull_request.html_url }}
-          embed_description: ${{ github.event.pull_request.body }}
-          embed_color: >
-            ${{ github.event.action == 'closed' && github.event.pull_request.merged == true && '5763717' || 
-                github.event.action == 'closed' && '16711680' || 
-                '3447003' }}
-          embed_author_name: ${{ github.event.pull_request.user.login }}
-          embed_author_icon: ${{ github.event.pull_request.user.avatar_url }}
-          embed_fields: |
-            Branch: ${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}
-            Status: ${{ github.event.action == 'closed' && (github.event.pull_request.merged && 'Merged' || 'Closed') || 'Open' }}
+          args: |
+            **New Pull Request Created!** 
+
+            **Repo:** ${{ github.repository }}
+            **Title:** ${{ github.event.pull_request.title }}
+            **Author:** ${{ github.event.pull_request.user.login }}
+            **Branch:** ${{ github.head_ref || github.ref_name }}
+            **Link:** ${{ github.event.pull_request.html_url }}
+
+            Check it out and leave a review! 👀
