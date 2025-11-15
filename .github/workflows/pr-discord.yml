@@ -15,9 +15,16 @@ jobs:
           DISCORD_SENDER: "GitHub PR Bot"
         with:
           args: |
-            **New Pull Request Created!** 
-            ## ${{ github.event.pull_request.title }}
-            ### ${{ github.event.pull_request.description }}
-            ${{ github.event.pull_request.user.login }}, ${{ github.head_ref || github.ref_name }}
+            {% if github.event.action == 'opened' %}
+            # New PR Created by ${{ github.event.pull_request.user.login }}
+            {% elif github.event.action == 'synchronize' %}
+            ## PR Updated! New commits pushed
+            {% elif github.event.action == 'reopened' %}
+            ## PR Reopened! Back from the dead
+            {% elif github.event.action == 'closed' and github.event.pull_request.merged %}
+            ## PR Merged! Successfully merged
+            {% else %}
+            ## PR Closed (not merged)
+            {% endif %}
             
-            ***Link: ${{ github.event.pull_request.html_url }}***
+            **Link:** ${{ github.event.pull_request.html_url }}
