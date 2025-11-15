@@ -8,23 +8,56 @@ jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Send Discord Notification
-        uses: Ilshidur/action-discord@master
+      - name: Send to Discord
+        uses: actions/github-script@v7
         env:
-          DISCORD_WEBHOOK: "https://discord.com/api/webhooks/1439028156391755869/EohlujS0sudaAtj6krL_tDaJEHoZ8XWoiSghO6fTT-Hn55bpTm59H9OXPaQ3HuY46WJH"
-          DISCORD_SENDER: "GitHub PR Bot"
+          WEBHOOK_URL: "https://discord.com/api/webhooks/1439028156391755869/EohlujS0sudaAtj6krL_tDaJEHoZ8XWoiSghO6fTT-Hn55bpTm59H9OXPaQ3HuY46WJH"
         with:
-          args: |
-            {% if github.event.action == 'opened' %}
-            # New PR Created by ${{ github.event.pull_request.user.login }}
-            {% elif github.event.action == 'synchronize' %}
-            ## PR Updated! New commits pushed
-            {% elif github.event.action == 'reopened' %}
-            ## PR Reopened! Back from the dead
-            {% elif github.event.action == 'closed' and github.event.pull_request.merged %}
-            ## PR Merged! Successfully merged
-            {% else %}
-            ## PR Closed (not merged)
-            {% endif %}
-            
-            **Link:** ${{ github.event.pull_request.html_url }}
+          script: |
+            const webhook = process.env.WEBHOOK_URL;
+            const action = context.payload.action;
+            const pr = context.payload.pull_request;
+            const user = pr.user.login;
+            const url = pr.html_url;
+            const merged = pr.merged;
+
+            let title = '';
+            let color = 0;
+
+            if (action === 'opened') {
+              title = `New PR Created by ${user}`;
+              color = 3447003; // Blue
+            } else if (action === 'synchronize') {
+              title = `PR Updated! New commits pushed`;
+              color = 16763955; // Gold
+            } else if (action === 'reopened') {
+              title = `PR Reopened! Back from the dead`;
+              color = 10181046; // Purple
+            } else if (action === 'closed' && merged) {
+              title = `PR Merged! Successfully merged`;
+              color = 5763719; // Green
+            } else if (action === 'closed') {
+              title = `PR Closed (not merged)`;
+              color = 15158332; // Red
+            } else {
+              return; // Ignore other actions
+            }
+
+            const body = {
+              embeds: [{
+                title: title,
+                url: url,
+                color: color,
+                fields: [
+                  { name: 'PR', value: `[#${pr.number}](${url})`, inline: true },
+                  { name: 'Author', value: user, inline: true }
+                ],
+                timestamp: new Date().toISOString()
+              }]
+            };
+
+            await fetch(webhook, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(body)
+            });
