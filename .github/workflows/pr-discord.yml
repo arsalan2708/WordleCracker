@@ -25,19 +25,19 @@ jobs:
             let color = 0;
 
             if (action === 'opened') {
-              title = `New PR Created by ${user}`;
+              title = `New PR Created: `;
               color = 3447003; // Blue
             } else if (action === 'synchronize') {
-              title = `PR Updated! New commits pushed`;
+              title = `PR Updated!: `;
               color = 16763955; // Gold
             } else if (action === 'reopened') {
-              title = `PR Reopened! Back from the dead`;
+              title = `PR Reopened!: `;
               color = 10181046; // Purple
             } else if (action === 'closed' && merged) {
-              title = `PR Merged! Successfully merged`;
+              title = `PR Merged!: `;
               color = 5763719; // Green
             } else if (action === 'closed') {
-              title = `PR Closed (not merged)`;
+              title = `PR Closed (not merged): `;
               color = 15158332; // Red
             } else {
               return; // Ignore other actions
@@ -45,7 +45,7 @@ jobs:
 
             const body = {
               embeds: [{
-                title: title,
+                title: `${title}${pr.title}`,
                 url: url,
                 color: color,
                 fields: [
